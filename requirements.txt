@@ -1,0 +1,4 @@
+hvac
+pyyaml
+pysocks
+python-consul

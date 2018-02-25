@@ -1,0 +1,8 @@
+.requirements.txt.install
+.requirements-dev.txt.install
+.requirements-tests.txt.install
+.coverage
+.pytest_cache/
+__pycache__/
+venv/
+htmlcov/
