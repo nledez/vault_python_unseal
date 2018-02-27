@@ -7,7 +7,6 @@ import unseal_vault
 import mock
 import pytest
 import yaml
-import httpretty
 from unittest.mock import MagicMock
 
 from . import mock_content
