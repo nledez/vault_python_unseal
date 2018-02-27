@@ -7,14 +7,11 @@ import unseal_vault
 import mock
 import pytest
 import yaml
+import httpretty
 from unittest.mock import MagicMock
-# import consul
 
 from . import mock_content
 
-# import sys
-# sys.modules['libs'] = mock.Mock()
-# sys.modules['libs.consul'] = mock.Mock()
 
 
 def test_get_config_yaml(capsys):
@@ -78,11 +75,34 @@ class Consul(object):
 def test_get_vault_server(mocker):
     mocker.patch.object(unseal_vault.consul, 'Consul', Consul)
     vault_servers = unseal_vault.get_vault_server('vault')
-    print(vault_servers)
     assert isinstance(vault_servers, list)
     assert len(vault_servers) == 3
     assert vault_servers == [
-            {'address': '192.168.1.1', 'node_name': 'consul-01', 'port': 8200},
-            {'address': '192.168.1.2', 'node_name': 'consul-02', 'port': 8200},
-            {'address': '192.168.1.3', 'node_name': 'consul-03', 'port': 8200},
-            ]
+        {'address': '192.168.1.1', 'node_name': 'consul-01', 'port': 8200},
+        {'address': '192.168.1.2', 'node_name': 'consul-02', 'port': 8200},
+        {'address': '192.168.1.3', 'node_name': 'consul-03', 'port': 8200},
+        ]
+
+
+class HvacClient(object):
+    def __init__(self, **kargs):
+        self.sealed = True
+
+    def __str__(self):
+        return 'Vault Mock'
+
+    def is_sealed(self):
+        return self.sealed
+
+    def unseal_multi(self, *kargs):
+        return self.sealed
+
+
+def test_get_unseal(mocker):
+    mocker.patch.object(unseal_vault.hvac, 'Client', HvacClient)
+    server = mock_content.UNSEAL_CONFIG[0]
+    config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
+    unseal_vault.unseal(server['address'],
+                        server['port'],
+                        config,
+                        server['node_name'])

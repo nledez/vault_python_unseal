@@ -25,3 +25,9 @@ CONSUL_CONTENT = [41, [{'Address': '192.168.1.1',
                         'Node': 'consul-03',
                         'ServiceAddress': '192.168.1.3',
                         'ServicePort': 8200}]]
+
+UNSEAL_CONFIG = [
+        {'address': '192.168.1.1', 'node_name': 'consul-01', 'port': 8200},
+        {'address': '192.168.1.2', 'node_name': 'consul-02', 'port': 8200},
+        {'address': '192.168.1.3', 'node_name': 'consul-03', 'port': 8200},
+        ]
