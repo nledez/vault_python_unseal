@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/nledez/vault_python_unseal.svg?branch=master)](https://travis-ci.org/nledez/vault_python_unseal) [![Coverage Status](https://coveralls.io/repos/github/nledez/vault_python_unseal/badge.svg)](https://coveralls.io/github/nledez/vault_python_unseal)
 # Install:
 
 ```
