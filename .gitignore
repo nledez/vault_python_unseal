@@ -1,8 +1,9 @@
-.requirements.txt.install
-.requirements-dev.txt.install
-.requirements-tests.txt.install
 .coverage
+.eggs
 .pytest_cache/
+.tox/
 __pycache__/
-venv/
+build/
 htmlcov/
+vault_unseal.egg-info/
+venv/
