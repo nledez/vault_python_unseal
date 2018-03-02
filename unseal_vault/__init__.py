@@ -4,12 +4,9 @@ Unseal vaul servers trouth ssh tunnel
 Get keys store in passwordstore as yaml
 '''
 import subprocess
-import socket
-import socks
 import consul
 import hvac
 import yaml
-import urllib3
 import sys
 
 def get_config(config_type, value):

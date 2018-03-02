@@ -12,7 +12,6 @@ from unittest.mock import MagicMock
 from . import mock_content
 
 
-
 def test_get_config_yaml(capsys):
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
     assert isinstance(config, dict)
@@ -94,10 +93,11 @@ class HvacClient(object):
         return self.sealed
 
     def unseal_multi(self, *kargs):
+        self.sealed = False
         return self.sealed
 
 
-def test_get_unseal(mocker):
+def test_sealed_get_unseal(capsys, mocker):
     mocker.patch.object(unseal_vault.hvac, 'Client', HvacClient)
     server = mock_content.UNSEAL_CONFIG[0]
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
@@ -105,3 +105,40 @@ def test_get_unseal(mocker):
                         server['port'],
                         config,
                         server['node_name'])
+    captured = capsys.readouterr()
+    assert captured.out == mock_content.SEALED_STDOUT
+
+
+class UnsealedHvacClient(HvacClient):
+    def __init__(self, **kargs):
+        self.sealed = False
+
+
+def test_unsealed_get_unseal(capsys, mocker):
+    mocker.patch.object(unseal_vault.hvac, 'Client', UnsealedHvacClient)
+    server = mock_content.UNSEAL_CONFIG[0]
+    config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
+    unseal_vault.unseal(server['address'],
+                        server['port'],
+                        config,
+                        server['node_name'])
+    captured = capsys.readouterr()
+    assert captured.out == mock_content.UNSEALED_STDOUT
+
+
+class StillSealedHvacClient(HvacClient):
+    def unseal_multi(self, *kargs):
+        self.sealed = True
+        return self.sealed
+
+
+def test_still_sealed_get_unseal(capsys, mocker):
+    mocker.patch.object(unseal_vault.hvac, 'Client', StillSealedHvacClient)
+    server = mock_content.UNSEAL_CONFIG[0]
+    config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
+    unseal_vault.unseal(server['address'],
+                        server['port'],
+                        config,
+                        server['node_name'])
+    captured = capsys.readouterr()
+    assert captured.out == mock_content.STILL_SEALED_STDOUT

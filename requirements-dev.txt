@@ -1,0 +1,4 @@
+tox
+pytest-xdist
+pytest-notifier
+pytest-watch

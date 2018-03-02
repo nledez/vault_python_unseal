@@ -31,3 +31,17 @@ UNSEAL_CONFIG = [
         {'address': '192.168.1.2', 'node_name': 'consul-02', 'port': 8200},
         {'address': '192.168.1.3', 'node_name': 'consul-03', 'port': 8200},
         ]
+
+SEALED_STDOUT = '''consul-01:
+Server sealed
+Server unsealed
+'''
+
+UNSEALED_STDOUT = '''consul-01:
+Server unsealed
+'''
+
+STILL_SEALED_STDOUT = '''consul-01:
+Server sealed
+Server still sealed
+'''
