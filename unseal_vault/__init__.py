@@ -9,6 +9,7 @@ import hvac
 import yaml
 import sys
 
+
 def get_config(config_type, value):
     '''
     Get config wrapper uncomment witch you want to use

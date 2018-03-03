@@ -13,6 +13,9 @@ from . import mock_content
 
 
 def test_get_config_yaml(capsys):
+    '''
+    Test vault information in yaml file
+    '''
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
     assert isinstance(config, dict)
     assert isinstance(config['unseal_keys'], list)
@@ -27,6 +30,9 @@ def test_get_config_yaml(capsys):
 
 @mock.patch('subprocess.check_output')
 def test_get_config_passtore(mock_subproc_popen, capsys):
+    '''
+    Test vault information in passwordstore
+    '''
     mock_subproc_popen.return_value = mock_content.YAML_CONTENT
     config = unseal_vault.get_config_passtore('vault/test')
     assert isinstance(config, dict)
@@ -43,6 +49,9 @@ def test_get_config_passtore(mock_subproc_popen, capsys):
 
 @mock.patch('subprocess.check_output')
 def test_get_config(mock_subproc_popen):
+    '''
+    Test vault information in generic function
+    '''
     mock_subproc_popen.return_value = mock_content.YAML_CONTENT
     config = unseal_vault.get_config('passtore', 'vault/test')
     assert isinstance(config, dict)
@@ -56,13 +65,19 @@ def test_get_config(mock_subproc_popen):
 
 
 class Consul(object):
+    '''
+    Consul mock
+    '''
     def __init__(self, *kargs):
+        '''
+        Mock init
+        '''
         self.catalog = Consul.Catalog(self)
 
-    def __str__(self):
-        return 'Consul Mock'
-
     class Catalog(object):
+        '''
+        Mock catalog
+        '''
         def __init__(self, *kargs):
             pass
 
@@ -71,6 +86,9 @@ class Consul(object):
 
 
 def test_get_vault_server(mocker):
+    '''
+    Test get vault server list in Consul
+    '''
     mocker.patch.object(unseal_vault.consul, 'Consul', Consul)
     vault_servers = unseal_vault.get_vault_server('vault')
     assert isinstance(vault_servers, list)
@@ -83,6 +101,9 @@ def test_get_vault_server(mocker):
 
 
 class HvacClient(object):
+    '''
+    Mock Vault client
+    '''
     def __init__(self, **kargs):
         self.sealed = True
 
@@ -98,6 +119,9 @@ class HvacClient(object):
 
 
 def test_sealed_get_unseal(capsys, mocker):
+    '''
+    Test unseal Vault
+    '''
     mocker.patch.object(unseal_vault.hvac, 'Client', HvacClient)
     server = mock_content.UNSEAL_CONFIG[0]
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
@@ -115,6 +139,9 @@ class UnsealedHvacClient(HvacClient):
 
 
 def test_unsealed_get_unseal(capsys, mocker):
+    '''
+    Test unseal Vault allready unsealed
+    '''
     mocker.patch.object(unseal_vault.hvac, 'Client', UnsealedHvacClient)
     server = mock_content.UNSEAL_CONFIG[0]
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
@@ -133,6 +160,9 @@ class StillSealedHvacClient(HvacClient):
 
 
 def test_still_sealed_get_unseal(capsys, mocker):
+    '''
+    Test unseal Vault can't unsealed
+    '''
     mocker.patch.object(unseal_vault.hvac, 'Client', StillSealedHvacClient)
     server = mock_content.UNSEAL_CONFIG[0]
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
