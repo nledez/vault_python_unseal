@@ -1,0 +1,19 @@
+---
+vault-yaml:
+ vault_servers_list:
+   vault-01:
+     address: 192.168.1.1
+     port: 8201
+   vault-02:
+     address: 192.168.1.2
+ unseal_keys:
+   - FoimdeegElmEctyinOssokparabBat
+   - saikTaDronjosBick2flalvEcVinus
+   - ThooshpAbpajWuIjwawbulgIfteak9
+   - OisckInudgiOkarUfNuWeogCemReds
+   - eivHowadGowJoQuadevedViedcyal3
+vault-consul-passwdstore:
+  vault_servers_consul_service_name: vault
+  unseal_keys_passtore: vault-test
+  ssh_proxy_cmd: ssh -f -n -D 8080 consul-01 'sleep 60'
+  http_proxy_socks: '127.0.0.1:8080'

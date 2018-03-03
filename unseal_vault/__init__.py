@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 '''
-Unseal vaul servers trouth ssh tunnel
+Unseal vault servers trouth ssh tunnel
 Get keys store in passwordstore as yaml
 '''
 import subprocess
