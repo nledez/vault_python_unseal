@@ -19,5 +19,5 @@ config = get_config('yaml', 'tests/vault-bad-test.yaml')
 for server in vault_servers:
     unseal(server['address'],
            server['port'],
-           config,
+           config['unseal_keys'],
            server['node_name'])

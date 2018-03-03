@@ -1,4 +1,5 @@
 tox
+Sphinx
 pytest-xdist
 pytest-notifier
 pytest-watch

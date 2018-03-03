@@ -85,12 +85,12 @@ class Consul(object):
             return mock_content.CONSUL_CONTENT
 
 
-def test_get_vault_server(mocker):
+def test_consul_get_vault_server(mocker):
     '''
     Test get vault server list in Consul
     '''
     mocker.patch.object(unseal_vault.consul, 'Consul', Consul)
-    vault_servers = unseal_vault.get_vault_server('vault')
+    vault_servers = unseal_vault.consul_get_vault_server('vault')
     assert isinstance(vault_servers, list)
     assert len(vault_servers) == 3
     assert vault_servers == [
@@ -127,7 +127,7 @@ def test_sealed_get_unseal(capsys, mocker):
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
     unseal_vault.unseal(server['address'],
                         server['port'],
-                        config,
+                        config['unseal_keys'],
                         server['node_name'])
     captured = capsys.readouterr()
     assert captured.out == mock_content.SEALED_STDOUT
@@ -147,7 +147,7 @@ def test_unsealed_get_unseal(capsys, mocker):
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
     unseal_vault.unseal(server['address'],
                         server['port'],
-                        config,
+                        config['unseal_keys'],
                         server['node_name'])
     captured = capsys.readouterr()
     assert captured.out == mock_content.UNSEALED_STDOUT
@@ -168,7 +168,7 @@ def test_still_sealed_get_unseal(capsys, mocker):
     config = unseal_vault.get_config_yaml('tests/vault-test.yaml')
     unseal_vault.unseal(server['address'],
                         server['port'],
-                        config,
+                        config['unseal_keys'],
                         server['node_name'])
     captured = capsys.readouterr()
     assert captured.out == mock_content.STILL_SEALED_STDOUT
