@@ -63,8 +63,9 @@ def test_open_config_file():
         config = unseal_vault.config.load()
         m.assert_called_once_with(unseal_vault.config.CONFIG_PATH, 'r')
         assert isinstance(config, dict)
-        assert list(config.keys()) == ['vault-yaml',
-                                       'vault-consul-passwdstore']
+        assert sorted(list(config.keys())) == ['vault-consul-passwdstore',
+                                               'vault-yaml']
+
 
 def test_open_config_file():
     patcher_exists = mock.patch('os.path.exists')

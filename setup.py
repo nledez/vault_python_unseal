@@ -49,7 +49,7 @@ setuptools.setup(
     tests_require=['pytest'],
     # package_data={'': ['requirements.txt']},
     description='HashiCorp Vault unseal helper',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     author='Nicolas Ledez',
     author_email='pypi.python.org@ledez.net',
     url='https://github.com/nledez/vault_python_unseal',
