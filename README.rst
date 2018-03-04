@@ -3,7 +3,7 @@ Python helper for unseal `Vault.io <http://vaultproject.io/>`_
 Status
 ------
 
-|Build Status|\ |Coverage Status|
+|Build Status|\ |Coverage Status|\ |Read the doc Status|
 
 .. |Build Status|
    image:: https://img.shields.io/travis/nledez/vault_python_unseal.svg?style=flat-square
@@ -11,6 +11,9 @@ Status
 .. |Coverage Status|
    image:: https://img.shields.io/coveralls/nledez/vault_python_unseal.svg?style=flat-square
    :target: https://coveralls.io/r/nledez/vault_python_unseal?branch=master
+.. |Read the doc Status|
+   image:: https://readthedocs.org/projects/vault-python-unseal/badge/?version=latest
+   :target: http://vault-python-unseal.readthedocs.io/
 
 Install
 -------
