@@ -2,12 +2,10 @@
 Test unseal_vault
 '''
 
-import unseal_vault
-
 import mock
 import pytest
-import yaml
-from unittest.mock import MagicMock
+
+import unseal_vault
 
 from . import mock_content
 
@@ -134,6 +132,9 @@ def test_sealed_get_unseal(capsys, mocker):
 
 
 class UnsealedHvacClient(HvacClient):
+    '''
+    Mock HvacClient unsealed
+    '''
     def __init__(self, **kargs):
         self.sealed = False
 
