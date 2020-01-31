@@ -20,8 +20,8 @@ Install
 
 .. code:: bash
 
-        virtualenv -p python3 venv
-        ./venv/bin/pip install -r requirements.txt
+        virtualenv -p python3 .venv
+        ./.venv/bin/pip install -r requirements.txt
 
 Launch SSH Proxy socks
 ----------------------
@@ -35,4 +35,4 @@ Unseal all node in cluster
 
 .. code:: bash
 
-        ./venv/bin/python unseal.py
+        ./.venv/bin/python unseal.py

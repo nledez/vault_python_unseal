@@ -16,7 +16,7 @@ def load():
     else:
         with open(CONFIG_PATH, 'r') as stream:
             try:
-                return yaml.load(stream)
+                return yaml.load(stream, Loader=yaml.FullLoader)
             except yaml.YAMLError as exc:
                 print(exc)
                 sys.exit(1)

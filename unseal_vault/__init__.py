@@ -32,7 +32,7 @@ def get_config_passtore(pass_name):
     stream = subprocess.check_output('pass show {}'.format(pass_name),
                                      shell=True)
     try:
-        return yaml.load(stream)
+        return yaml.load(stream, Loader=yaml.FullLoader)
     except yaml.YAMLError as exc:
         print(exc)
         sys.exit(1)
@@ -46,7 +46,7 @@ def get_config_yaml(yaml_file):
     '''
     with open(yaml_file, 'r') as stream:
         try:
-            return yaml.load(stream)
+            return yaml.load(stream, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
             print(exc)
             sys.exit(1)
