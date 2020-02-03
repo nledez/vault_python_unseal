@@ -31,8 +31,8 @@ def get_requirements(requirements_filename, update_links=False):
             require_list.append(str(item.req))
     return require_list
 
-requirements = get_requirements('requirements.txt', update_links=True)
-test_requirements = get_requirements('requirements-tests.txt')
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
 CURRENT_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 if CURRENT_DIRECTORY in sys.path:

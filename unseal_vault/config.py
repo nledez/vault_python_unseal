@@ -11,7 +11,7 @@ CONFIG_PATH = '~/.unseal_vault.yml'
 
 def load():
     if not os.path.exists(CONFIG_PATH):
-        print('Missing ~/.unseal_vault.yml file. Please create it.')
+        print('Missing {} file. Please create it.'.format(CONFIG_PATH))
         sys.exit(1)
     else:
         with open(CONFIG_PATH, 'r') as stream:

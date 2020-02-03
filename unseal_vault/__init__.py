@@ -5,11 +5,15 @@ Get keys store in passwordstore as yaml
 import subprocess
 import consul
 import hvac
+import json
+import os
 import yaml
 import sys
 
+from pprint import pprint
 
-def get_config(config_type, path):
+
+def get_config(config_name, yaml_file='~/.unseal_vault.yml'):
     '''
     Get config wrapper
 
@@ -17,11 +21,104 @@ def get_config(config_type, path):
 
     *path* the pass to get yaml configuration
     '''
-    if config_type == 'passtore':
-        return get_config_passtore(path)
-    elif config_type == 'yaml':
-        return get_config_yaml(path)
 
+    full_path = os.path.expanduser(yaml_file)
+    if not os.path.exists(full_path):
+        print('Missing {} file. Please create it.'.format(full_path))
+        sys.exit(1)
+    else:
+        with open(full_path, 'r') as stream:
+            try:
+                return yaml.load(stream, Loader=yaml.FullLoader)[config_name]
+            except yaml.YAMLError as exc:
+                print(exc)
+                sys.exit(1)
+
+
+def handle_config(config):
+    if config['type'] == 'op':
+        return get_config_op(config)
+
+
+def get_config_op(config):
+    op_check_existing_vault(config)
+    uuid = op_get_item_id(config, config['op_title'])
+    fields = op_get_item(config, uuid)
+    return op_extract_from_item(config, fields)
+
+
+def op_get_item(config, uuid):
+    stream = subprocess.check_output('op get item {} --vault={}'.format(
+        uuid,
+        config['op_vault'],
+    ),
+        shell=True)
+    data = json.loads(stream)
+
+    sections = data.get('details', {}).get('sections', {})
+    return op_extract_fields(sections)
+
+
+def op_extract_from_item(config, fields):
+    data = {}
+
+    root_token = fields[config['op_fields_root_token']]
+    unseal_keys = []
+    for i in range(1, 10):
+        last_value = fields.get(config['op_firlds_unseal_keys'].format(i), None)
+        if last_value:
+            unseal_keys.append(last_value)
+
+    data['root_token'] = root_token
+    data['unseal_keys'] = unseal_keys
+
+    return data
+
+
+def op_extract_fields(sections):
+    fields_list = {}
+    for section in sections:
+        fields = section.get('fields', None)
+        if fields:
+            for field in fields:
+                fields_list[field['t']] = field['v']
+            return fields_list
+
+
+def op_get_item_id(config, title):
+    item_list = op_get_vault_item_list(config)
+    return(item_list[title])
+
+
+def op_get_vault_item_list(config):
+    item_list = {}
+    stream = subprocess.check_output('op list items --vault={}'.format(
+        config['op_vault']),
+        shell=True)
+    data = json.loads(stream)
+
+    for item in data:
+        uuid = item['uuid']
+        title = item.get('overview', {}).get('title', None)
+        item_list[title] = uuid
+
+    return item_list
+
+
+def op_check_existing_vault(config):
+    vault_list = []
+
+    stream = subprocess.check_output('op list vaults', shell=True)
+    data = json.loads(stream)
+    for vault in data:
+        vault_list.append(vault['name'])
+    if config['op_vault'] not in vault_list:
+        print('Need to login with:')
+        print('eval `op signin {} {}`'.format(
+            config['op_account_address'],
+            config['op_account_email'],
+        ))
+        sys.exit(1)
 
 def get_config_passtore(pass_name):
     '''
@@ -36,20 +133,6 @@ def get_config_passtore(pass_name):
     except yaml.YAMLError as exc:
         print(exc)
         sys.exit(1)
-
-
-def get_config_yaml(yaml_file):
-    '''
-    Get config in yaml file to avoid password store stuff
-
-    *yaml_file* is the filename contain config
-    '''
-    with open(yaml_file, 'r') as stream:
-        try:
-            return yaml.load(stream, Loader=yaml.FullLoader)
-        except yaml.YAMLError as exc:
-            print(exc)
-            sys.exit(1)
 
 
 def consul_get_vault_server(vault_name):
