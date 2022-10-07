@@ -10,8 +10,6 @@ import os
 import yaml
 import sys
 
-from pprint import pprint
-
 
 def get_config(config_name, yaml_file='~/.unseal_vault.yml'):
     '''
@@ -38,17 +36,76 @@ def get_config(config_name, yaml_file='~/.unseal_vault.yml'):
 def handle_config(config):
     if config['type'] == 'op':
         return get_config_op(config)
+    if config['type'] == 'op_legacy':
+        return get_config_op_legacy(config)
 
 
 def get_config_op(config):
+    op = config.get('ob_binary', 'op')
     try:
         op_check_existing_vault(config)
     except subprocess.CalledProcessError:
         print('You need to be logged with:')
-        print('eval $(op signin)')
+        print(f'eval $({op} signin)')
+        sys.exit(1)
+
+    data = {}
+
+    data['root_token'] = os_get_item_entry(config, config['op_title'], 'password')
+
+    unseal_keys = []
+    for i in range(1, 10):
+        try:
+            last_value = os_get_item_entry(config, config['op_title'], config['op_firlds_unseal_keys'].format(i))
+            if last_value:
+                unseal_keys.append(last_value)
+        except subprocess.CalledProcessError:
+            pass
+
+    data['unseal_keys'] = unseal_keys
+
+    return data
+
+
+def os_get_item_entry(config, title, entry_name):
+    op = config.get('ob_binary', 'op')
+    stream = subprocess.check_output('{} item get --vault "{}" "{}" --format json --fields label="{}" 2>/dev/null'.format(
+        op,
+        config['op_vault'],
+        title,
+        entry_name),
+        shell=True)
+    data = json.loads(stream)
+
+    return data['value']
+
+
+def op_check_existing_vault(config):
+    op = config.get('ob_binary', 'op')
+    vault_list = []
+    vault_name = config['op_vault']
+
+    stream = subprocess.check_output(f'{op} vault list --format=json', shell=True)
+    data = json.loads(stream)
+    for vault in data:
+        vault_list.append(vault['name'])
+    if vault_name not in vault_list:
+        print(f'Missing "{vault_name}" vault')
+        print('May need to login with:')
+        print(f'eval $({op} signin)')
+        sys.exit(1)
+
+
+def get_config_op_legacy(config):
+    op = config.get('ob_binary', 'op')
+    try:
+        op_legacy_check_existing_vault(config)
+    except subprocess.CalledProcessError:
+        print('You need to be logged with:')
+        print(f'eval $({op} signin)')
         sys.exit(1)
     try:
-        uuid = op_get_item_id(config, config['op_title'])
+        uuid = op_legacy_get_item_id(config, config['op_title'])
     except KeyError:
         print('Unknown config in 1password: {}'.format(config['op_title']))
         print('Config:')
@@ -65,7 +122,9 @@ def get_config_op(config):
 
 
 def op_get_data(config, uuid):
-    stream = subprocess.check_output('op get item {} --vault={}'.format(
+    op = config.get('ob_binary', 'op')
+    stream = subprocess.check_output('{} get item {} --vault={}'.format(
+        op,
         uuid,
         config['op_vault'],
     ),
@@ -112,14 +171,16 @@ def op_extract_fields(sections):
             return fields_list
 
 
-def op_get_item_id(config, title):
-    item_list = op_get_vault_item_list(config)
+def op_legacy_get_item_id(config, title):
+    item_list = op_legacy_get_vault_item_list(config)
     return(item_list[title])
 
 
-def op_get_vault_item_list(config):
+def op_legacy_get_vault_item_list(config):
+    op = config.get('ob_binary', 'op')
     item_list = {}
-    stream = subprocess.check_output('op list items --vault={}'.format(
+    stream = subprocess.check_output('{} list items --vault={}'.format(
+        op,
         config['op_vault']),
         shell=True)
     data = json.loads(stream)
@@ -132,17 +193,19 @@ def op_get_vault_item_list(config):
     return item_list
 
 
-def op_check_existing_vault(config):
+def op_legacy_check_existing_vault(config):
+    op = config.get('ob_binary', 'op')
     vault_list = []
 
-    stream = subprocess.check_output('op list vaults', shell=True)
+    stream = subprocess.check_output(f'{op} list vaults', shell=True)
     data = json.loads(stream)
     for vault in data:
         vault_list.append(vault['name'])
     if config['op_vault'] not in vault_list:
         print('Need to login with:')
-        print('eval $(op signin)')
+        print(f'eval $({op} signin)')
         sys.exit(1)
+
 
 def get_config_passtore(pass_name):
     '''

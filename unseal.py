@@ -21,6 +21,11 @@ config = get_config(cluster)
 for k, v in handle_config(config).items():
     config[k] = v
 
+if len(config['unseal_keys']) == 0:
+    print('unseal_keys is empty, may check parameter in config file')
+    sys.exit(1)
+
+
 if 'consul_port' not in config:
     config['consul_port'] = '8500'
 if 'consul_scheme' not in config:
