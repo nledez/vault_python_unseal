@@ -41,20 +41,47 @@ def handle_config(config):
 
 
 def get_config_op(config):
-    op_check_existing_vault(config)
-    uuid = op_get_item_id(config, config['op_title'])
-    fields = op_get_item(config, uuid)
-    return op_extract_from_item(config, fields)
+    try:
+        op_check_existing_vault(config)
+    except subprocess.CalledProcessError:
+        print('You need to be logged with:')
+        print('eval $(op signin)')
+        sys.exit(1)
+    try:
+        uuid = op_get_item_id(config, config['op_title'])
+    except KeyError:
+        print('Unknown config in 1password: {}'.format(config['op_title']))
+        print('Config:')
+        print(config)
+        sys.exit(1)
 
 
-def op_get_item(config, uuid):
+    json = op_get_data(config, uuid)
+    fields = op_get_item(json)
+    data = op_extract_from_item(config, fields)
+    if 'root_token' not in data:
+        data['root_token'] = op_extract_from_password(json)
+    return data
+
+
+def op_get_data(config, uuid):
     stream = subprocess.check_output('op get item {} --vault={}'.format(
         uuid,
         config['op_vault'],
     ),
         shell=True)
     data = json.loads(stream)
+    return data
 
+
+def op_extract_from_password(data):
+    fields = data.get('details', {}).get('fields', {})
+    for field in fields:
+        if field.get('name', '') == 'password':
+            return field.get('value')
+
+
+def op_get_item(data):
     sections = data.get('details', {}).get('sections', {})
     return op_extract_fields(sections)
 
@@ -62,14 +89,14 @@ def op_get_item(config, uuid):
 def op_extract_from_item(config, fields):
     data = {}
 
-    root_token = fields[config['op_fields_root_token']]
+    if 'op_fields_root_token' in config:
+        data['root_token'] = fields[config['op_fields_root_token']]
     unseal_keys = []
     for i in range(1, 10):
         last_value = fields.get(config['op_firlds_unseal_keys'].format(i), None)
         if last_value:
             unseal_keys.append(last_value)
 
-    data['root_token'] = root_token
     data['unseal_keys'] = unseal_keys
 
     return data
@@ -114,10 +141,7 @@ def op_check_existing_vault(config):
         vault_list.append(vault['name'])
     if config['op_vault'] not in vault_list:
         print('Need to login with:')
-        print('eval `op signin {} {}`'.format(
-            config['op_account_address'],
-            config['op_account_email'],
-        ))
+        print('eval $(op signin)')
         sys.exit(1)
 
 def get_config_passtore(pass_name):
@@ -135,14 +159,19 @@ def get_config_passtore(pass_name):
         sys.exit(1)
 
 
-def consul_get_vault_server(vault_name):
+def consul_get_vault_server(vault_name, consul_host='127.0.0.1',
+                            consul_port='8500', consul_scheme='http'):
     '''
     Get vault server list in Consul
     And keep only important fields
 
     *vault_name* is the Vault service name defined in Consul
     '''
-    consul_client = consul.Consul()
+    consul_client = consul.Consul(host=consul_host,
+                                  port=consul_port,
+                                  scheme=consul_scheme,
+                                  verify=False)
+    # print(consul_client.catalog.service(vault_name))
     servers = list(map(
         lambda e: {
             'node_name': e['Node'],
@@ -154,7 +183,7 @@ def consul_get_vault_server(vault_name):
     return servers
 
 
-def unseal(host, port, unseal_keys, name=None):
+def unseal(scheme, host, port, unseal_keys, name=None):
     '''
     Unseal one server
 
@@ -164,15 +193,17 @@ def unseal(host, port, unseal_keys, name=None):
 
     *unseal_keys* the unseal keys list
     '''
+    url = '{}://{}:{}'.format(scheme, host, port)
+    print('Connect to URL: {}'.format(url))
     if name:
         print('{}:'.format(name))
     client = hvac.Client(
-        url='https://{}:{}'.format(host, port),
+        url=url,
         verify=False)
-    if client.is_sealed():
+    if client.sys.is_sealed():
         print('Server sealed')
-        client.unseal_multi(unseal_keys)
-        if client.is_sealed():
+        client.sys.submit_unseal_keys(unseal_keys)
+        if client.sys.is_sealed():
             print('Server still sealed')
         else:
             print('Server unsealed')

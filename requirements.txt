@@ -1,4 +1,4 @@
 hvac
 pyyaml
-pysocks
+PySocks
 python-consul
