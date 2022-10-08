@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-from unseal_vault import consul_get_vault_server, handle_config, get_config, unseal
+from unseal_vault import handle_config, get_config
+from unseal_vault.consul import consul_get_vault_server
+from unseal_vault.vault import unseal
 import subprocess
 import socket
 import socks

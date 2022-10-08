@@ -1,0 +1,15 @@
+acme:
+  type: op
+  op_account_address: acme
+  op_account_email: bob@acme.tld
+  op_vault: Infrastructure
+  op_title: Vault servers
+  op_firlds_unseal_keys: Unseal Key {}
+  ssh_command: 'ssh -f -D 1234 bob@vault-01.acme.tld sleep 10'
+  proxy_sock_host: 127.0.0.1
+  proxy_sock_port: 1234
+  consul_host: 127.0.0.1
+  consul_port: 8501
+  consul_scheme: https
+  vault_scheme: https
+  vault_server: https://active.vault.service.consul:8200/

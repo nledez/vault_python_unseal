@@ -10,3 +10,4 @@ docs/_build/
 htmlcov/
 vault_unseal.egg-info/
 .venv/
+dist/
