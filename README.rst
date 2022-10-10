@@ -6,8 +6,8 @@ Status
 |Build Status|\ |Coverage Status|\ |Read the doc Status|
 
 .. |Build Status|
-   image:: https://img.shields.io/travis/nledez/vault_python_unseal.svg?style=flat-square
-   :target: https://travis-ci.org/nledez/vault_python_unseal
+   image:: https://github.com/nledez/vault_python_unseal/actions/workflows/tests.yml/badge.svg
+   :target: https://github.com/nledez/vault_python_unseal/actions/workflows/tests.yml
 .. |Coverage Status|
    image:: https://img.shields.io/coveralls/nledez/vault_python_unseal.svg?style=flat-square
    :target: https://coveralls.io/r/nledez/vault_python_unseal?branch=master
