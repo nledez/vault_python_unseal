@@ -51,6 +51,7 @@ vault_servers = consul_get_vault_server('vault',
                                         consul_port=config['consul_port'],
                                         consul_scheme=config['consul_scheme'],
                                         )
+
 for server in vault_servers:
     unseal(config['vault_scheme'],
            server['address'],

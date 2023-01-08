@@ -5,7 +5,7 @@ import sys
 from .run import run_cmd
 
 
-def get_config_op_legacy(config):
+def get_config_op_legacy_v1(config):
     op = config.get('ob_binary', 'op')
     try:
         op_legacy_check_existing_vault(config)

@@ -7,7 +7,8 @@ import yaml
 import sys
 
 from .op import get_config_op
-from .op_legacy import get_config_op_legacy
+from .op_legacy_v1 import get_config_op_legacy_v1
+from .op_legacy_v2 import get_config_op_legacy_v2
 
 
 def get_config(config_name, yaml_file='~/.unseal_vault.yml'):
@@ -38,5 +39,7 @@ def get_config(config_name, yaml_file='~/.unseal_vault.yml'):
 def handle_config(config):
     if config['type'] == 'op':
         return get_config_op(config)
-    if config['type'] == 'op_legacy':
-        return get_config_op_legacy(config)
+    if config['type'] == 'op_legacy_v1':
+        return get_config_op_legacy_v1(config)
+    if config['type'] == 'op_legacy_v2':
+        return get_config_op_legacy_v2(config)

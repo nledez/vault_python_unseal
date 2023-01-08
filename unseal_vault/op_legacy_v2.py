@@ -32,7 +32,7 @@ def op_check_existing_vault(config):
         sys.exit(1)
 
 
-def get_config_op(config):
+def get_config_op_legacy_v2(config):
     op_check_existing_vault(config)
 
     data = {}
@@ -40,8 +40,7 @@ def get_config_op(config):
     data['root_token'] = os_get_item_entry(config, config['op_title'], 'password')
 
     unseal_keys = []
-    op_firlds_unseal_keys_count = config.get('op_firlds_unseal_keys_count', 1)
-    for i in range(1, op_firlds_unseal_keys_count+1):
+    for i in range(1, 10):
         try:
             last_value = os_get_item_entry(config, config['op_title'], config['op_firlds_unseal_keys'].format(i))
             if last_value:
@@ -56,12 +55,12 @@ def get_config_op(config):
 
 def os_get_item_entry(config, title, entry_name):
     op = config.get('ob_binary', 'op')
-    stream = run_cmd('{} read "op://{}/{}/{}"'.format(
+    stream = run_cmd('{} item get --vault "{}" "{}" --format json --fields label="{}" 2>/dev/null'.format(
         op,
         config['op_vault'],
         title,
         entry_name))
-    data = stream.decode().rstrip('\n')
+    data = json.loads(stream)
 
-    return data
+    return data['value']
 
