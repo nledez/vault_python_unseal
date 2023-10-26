@@ -1,38 +1,28 @@
-Python helper for unseal `Vault.io <http://vaultproject.io/>`_
+Python helper for unseal [Vault.io](http://vaultproject.io/) cluster.
 
-Status
-------
+## Status
 
-|Build Status|\ |Coverage Status|\ |Read the doc Status|
+[![Build Status](https://github.com/nledez/vault_python_unseal/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/nledez/vault_python_unseal/actions/workflows/tests.yml)
 
-.. |Build Status|
-   image:: https://github.com/nledez/vault_python_unseal/actions/workflows/tests.yml/badge.svg
-   :target: https://github.com/nledez/vault_python_unseal/actions/workflows/tests.yml
-.. |Coverage Status|
-   image:: https://img.shields.io/coveralls/nledez/vault_python_unseal.svg?style=flat-square
-   :target: https://coveralls.io/r/nledez/vault_python_unseal?branch=master
-.. |Read the doc Status|
-   image:: https://readthedocs.org/projects/vault-python-unseal/badge/?version=latest
-   :target: http://vault-python-unseal.readthedocs.io/
+[![Coverage Status](https://img.shields.io/coveralls/nledez/vault_python_unseal.svg?style=flat-square)](https://coveralls.io/r/nledez/vault_python_unseal?branch=master)
 
-Install
--------
+[![Read the doc Status](https://readthedocs.org/projects/vault-python-unseal/badge/?version=latest)](http://vault-python-unseal.readthedocs.io/)
 
-.. code:: bash
+## Install
 
-        virtualenv -p python3 .venv
-        ./.venv/bin/pip install -r requirements.txt
+```
+virtualenv -p python3 .venv
+./.venv/bin/pip install -r requirements.txt
+```
 
-Launch SSH Proxy socks
-----------------------
+## Launch SSH Proxy socks
 
-.. code:: bash
+```
+ssh -D 8585 consul-server
+```
 
-        ssh -D 8585 consul-server
+## Unseal all node in cluster
 
-Unseal all node in cluster
---------------------------
-
-.. code:: bash
-
-        ./.venv/bin/python unseal.py
+```
+./.venv/bin/python unseal.py
+```
