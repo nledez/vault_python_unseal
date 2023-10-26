@@ -4,43 +4,45 @@ Test unseal_vault
 
 import unseal_vault
 
-import mock
+from unittest.mock import patch
 import pytest
 import yaml
 import subprocess
 from subprocess import CalledProcessError
 from unittest.mock import MagicMock
 
-from . import mock_content
+from tests import mock_content
 
+import os
+TEST_DIR = os.path.dirname(os.path.realpath(__file__))
 
 def test_get_config():
     '''
     Test yaml load capacity
     '''
-    config = unseal_vault.get_config('acme', 'tests/dot_unseal_vault.yml')
+    config = unseal_vault.get_config('acme', f'{TEST_DIR}/dot_unseal_vault.yml')
     assert isinstance(config, dict)
     with pytest.raises(SystemExit):
-        unseal_vault.get_config('missing', 'tests/dot_unseal_vault.yml')
+        unseal_vault.get_config('missing', f'{TEST_DIR}/dot_unseal_vault.yml')
     with pytest.raises(SystemExit):
         unseal_vault.get_config('acme', 'missing-file.yaml')
     with pytest.raises(SystemExit):
-        unseal_vault.get_config('acme', 'tests/bad.yml')
+        unseal_vault.get_config('acme', f'{TEST_DIR}/bad.yml')
 
 
 def test_handle_config():
     '''
     Test handle_config capacity
     '''
-    mock_get_config_op = mock.patch('unseal_vault.get_config_op', autospec=True)
+    mock_get_config_op = patch('unseal_vault.get_config_op_v1', autospec=True)
     with mock_get_config_op as m:
-        config = {'type': 'op', 'op_vault': 'Infrastructure'}
+        config = {'type': 'op_v1', 'op_vault': 'Infrastructure'}
         unseal_vault.handle_config(config)
         m.assert_called_with(config)
 
-    mock_get_config_op = mock.patch('unseal_vault.get_config_op_legacy', autospec=True)
+    mock_get_config_op = patch('unseal_vault.get_config_op_v2', autospec=True)
     with mock_get_config_op as m:
-        config = {'type': 'op_legacy', 'op_vault': 'Infrastructure'}
+        config = {'type': 'op_v2', 'op_vault': 'Infrastructure'}
         unseal_vault.handle_config(config)
         m.assert_called_with(config)
 
@@ -61,7 +63,7 @@ def test_handle_config():
 #     print(out, err)
 
 
-# @mock.patch('subprocess.check_output')
+# @patch('subprocess.check_output')
 # def test_get_config_passtore(mock_subproc_popen, capsys):
 #     '''
 #     Test vault information in passwordstore
@@ -80,7 +82,7 @@ def test_handle_config():
 #     print(out, err)
 
 
-# @mock.patch('subprocess.check_output')
+# @patch('subprocess.check_output')
 # def test_get_config(mock_subproc_popen):
 #     '''
 #     Test vault information in generic function

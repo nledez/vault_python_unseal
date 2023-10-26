@@ -32,17 +32,18 @@ def op_check_existing_vault(config):
         sys.exit(1)
 
 
-def get_config_op_legacy_v2(config):
-    op_check_existing_vault(config)
+def get_config_op_v4(config):
+    # op_check_existing_vault(config)
 
     data = {}
 
-    data['root_token'] = os_get_item_entry(config, config['op_title'], 'password')
+    data['root_token'] = os_get_item_entry(config, config['op_root_token'])
 
     unseal_keys = []
-    for i in range(1, 10):
+    op_fields_unseal_keys_count = config.get('op_fields_unseal_keys_count', 1)
+    for i in range(1, op_fields_unseal_keys_count+1):
         try:
-            last_value = os_get_item_entry(config, config['op_title'], config['op_firlds_unseal_keys'].format(i))
+            last_value = os_get_item_entry(config, config['op_unseal_keys'].format(i))
             if last_value:
                 unseal_keys.append(last_value)
         except subprocess.CalledProcessError:
@@ -53,14 +54,12 @@ def get_config_op_legacy_v2(config):
     return data
 
 
-def os_get_item_entry(config, title, entry_name):
+def os_get_item_entry(config, path):
     op = config.get('ob_binary', 'op')
-    stream = run_cmd('{} item get --vault "{}" "{}" --format json --fields label="{}" 2>/dev/null'.format(
+    stream = run_cmd('{} read "{}"'.format(
         op,
-        config['op_vault'],
-        title,
-        entry_name))
-    data = json.loads(stream)
+        path))
+    data = stream.decode().rstrip('\n')
 
-    return data['value']
+    return data
 

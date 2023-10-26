@@ -1,3 +1,5 @@
+import pytest
+
 import unseal_vault.vault
 
 from . import mock_content

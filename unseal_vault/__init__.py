@@ -1,14 +1,15 @@
 '''
-Unseal vault servers trouth ssh tunnel
+Unseal vault servers through ssh tunnel
 Get keys store in passwordstore as yaml
 '''
 import os
 import yaml
 import sys
 
-from .op import get_config_op
-from .op_legacy_v1 import get_config_op_legacy_v1
-from .op_legacy_v2 import get_config_op_legacy_v2
+from .op_v1 import get_config_op_v1
+from .op_v2 import get_config_op_v2
+from .op_v3 import get_config_op_v3
+from .op_v4 import get_config_op_v4
 
 
 def get_config(config_name, yaml_file='~/.unseal_vault.yml'):
@@ -37,9 +38,11 @@ def get_config(config_name, yaml_file='~/.unseal_vault.yml'):
 
 
 def handle_config(config):
-    if config['type'] == 'op':
-        return get_config_op(config)
-    if config['type'] == 'op_legacy_v1':
-        return get_config_op_legacy_v1(config)
-    if config['type'] == 'op_legacy_v2':
-        return get_config_op_legacy_v2(config)
+    if config['type'] == 'op_v1':
+        return get_config_op_v1(config)
+    if config['type'] == 'op_v2':
+        return get_config_op_v2(config)
+    if config['type'] == 'op_v3':
+        return get_config_op_v3(config)
+    if config['type'] == 'op_v4':
+        return get_config_op_v4(config)
