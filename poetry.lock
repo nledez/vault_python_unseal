@@ -342,21 +342,19 @@ typing = ["typing-extensions (>=4.7.1)"]
 
 [[package]]
 name = "hvac"
-version = "2.0.0"
+version = "1.2.1"
 description = "HashiCorp Vault API client"
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = ">=3.6.2,<4.0.0"
 files = [
-    {file = "hvac-2.0.0-py3-none-any.whl", hash = "sha256:3b14d0979b98ea993eca73b7dac7161b5547ede369a9b28f4fa40f18e74ec3f3"},
-    {file = "hvac-2.0.0.tar.gz", hash = "sha256:6a51cb9a0d22fe13e824cb0b0a1ce2eeacb9ce6af68b7d1b6689e25ec1becaf5"},
+    {file = "hvac-1.2.1-py3-none-any.whl", hash = "sha256:cb87f5724be8fd5f57507f5d5a94e6c42d2675128b460bf3186f966e07d4db78"},
+    {file = "hvac-1.2.1.tar.gz", hash = "sha256:c786e3dfa1f35239810e5317cccadbe358f49b8c9001a1f2f68b79a250b9f8a1"},
 ]
 
 [package.dependencies]
+pyhcl = ">=0.4.4,<0.5.0"
 requests = ">=2.27.1,<3.0.0"
-
-[package.extras]
-parser = ["pyhcl (>=0.4.4,<0.5.0)"]
 
 [[package]]
 name = "idna"
@@ -449,6 +447,18 @@ files = [
 [package.extras]
 dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
+
+[[package]]
+name = "pyhcl"
+version = "0.4.5"
+description = "HCL configuration parser for python"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyhcl-0.4.5-py3-none-any.whl", hash = "sha256:30ee337d330d1f90c9f5ed8f49c468f66c8e6e43192bdc7c6ece1420beb3070c"},
+    {file = "pyhcl-0.4.5.tar.gz", hash = "sha256:c47293a51ccdd25e18bb5c8c0ab0ffe355b37c87f8d6f9d3280dc41efd4740bc"},
+]
 
 [[package]]
 name = "pyproject-api"
@@ -839,4 +849,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "abaafb6125e000df94fa3efd3627e55e656a1a0c3e314253adb93ef33ccefbf2"
+content-hash = "e74e9daf4006969d1dfc3e7f2647c34a060ed7ab6330d04ddcad6f7f130f1c25"

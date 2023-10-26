@@ -35,7 +35,8 @@ UNSEAL_CONFIG = [
     {'address': '192.168.1.3', 'node_name': 'consul-03', 'port': 8200},
 ]
 
-SEALED_STDOUT = '''consul-01:
+SEALED_STDOUT = '''Connect to URL: https://192.168.1.1:8200
+consul-01:
 Server sealed
 Server unsealed
 '''
