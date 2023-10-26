@@ -12,6 +12,13 @@ class HvacSys(object):
     def is_sealed(self):
         return self.sealed
 
+    def submit_unseal_keys(self, *args, **kwargs):
+        # Implement the mock behavior for submit_unseal_keys
+        # For example, if submitting the keys is supposed to unseal the vault,
+        # you might want to set self.sealed to False.
+        self.sealed = False
+        return self.sealed
+
 
 class HvacClient(object):
     '''
@@ -21,6 +28,7 @@ class HvacClient(object):
         self.sealed = True
         self._sys = HvacSys()
 
+    @property
     def sys(self):
         return self._sys
 
@@ -47,10 +55,7 @@ def test_sealed_get_unseal(capsys, mocker):
             'eivHowadGowJoQuadevedViedcyal3',
         ]
     }
-    # config = unseal_vault.config.get_config_yaml('tests/vault-test.yaml')
-    # print(config)
-    # import sys
-    # sys.exit(1)
+
     unseal_vault.vault.unseal('https',
                               server['address'],
                               server['port'],
