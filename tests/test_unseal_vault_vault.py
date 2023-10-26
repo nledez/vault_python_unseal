@@ -1,5 +1,3 @@
-import pytest
-
 import unseal_vault.vault
 
 from . import mock_content
@@ -21,9 +19,10 @@ class HvacSys(object):
 
 
 class HvacClient(object):
-    '''
+    """
     Mock Vault client
-    '''
+    """
+
     def __init__(self, **kargs):
         self.sealed = True
         self._sys = HvacSys()
@@ -33,7 +32,7 @@ class HvacClient(object):
         return self._sys
 
     def __str__(self):
-        return 'Vault Mock'
+        return "Vault Mock"
 
     def unseal_multi(self, *kargs):
         self.sealed = False
@@ -41,26 +40,28 @@ class HvacClient(object):
 
 
 def test_sealed_get_unseal(capsys, mocker):
-    '''
+    """
     Test unseal Vault
-    '''
-    mocker.patch.object(unseal_vault.vault.hvac, 'Client', HvacClient)
+    """
+    mocker.patch.object(unseal_vault.vault.hvac, "Client", HvacClient)
     server = mock_content.UNSEAL_CONFIG[0]
     config = {
-        'unseal_keys': [
-            'FoimdeegElmEctyinOssokparabBat',
-            'saikTaDronjosBick2flalvEcVinus',
-            'ThooshpAbpajWuIjwawbulgIfteak9',
-            'OisckInudgiOkarUfNuWeogCemReds',
-            'eivHowadGowJoQuadevedViedcyal3',
+        "unseal_keys": [
+            "FoimdeegElmEctyinOssokparabBat",
+            "saikTaDronjosBick2flalvEcVinus",
+            "ThooshpAbpajWuIjwawbulgIfteak9",
+            "OisckInudgiOkarUfNuWeogCemReds",
+            "eivHowadGowJoQuadevedViedcyal3",
         ]
     }
 
-    unseal_vault.vault.unseal('https',
-                              server['address'],
-                              server['port'],
-                              config['unseal_keys'],
-                              server['node_name'])
+    unseal_vault.vault.unseal(
+        "https",
+        server["address"],
+        server["port"],
+        config["unseal_keys"],
+        server["node_name"],
+    )
     captured = capsys.readouterr()
     assert captured.out == mock_content.SEALED_STDOUT
 

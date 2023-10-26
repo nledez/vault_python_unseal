@@ -3,7 +3,7 @@ omit =
 	tests/*
 	unseal_vault/op_legacy_v*
 [report]
-exclude_lines = 
+exclude_lines =
 	pragma: no cover
 	# Don't complain if non-runnable code isn't run:
 	if 0:

@@ -1,48 +1,45 @@
-'''
+"""
 Test unseal_vault
-'''
-
-import unseal_vault
-
-from unittest.mock import patch
-import pytest
-import yaml
-import subprocess
-from subprocess import CalledProcessError
-from unittest.mock import MagicMock
-
-from tests import mock_content
+"""
 
 import os
+from unittest.mock import patch
+
+import pytest
+
+import unseal_vault
+from tests import mock_content
+
 TEST_DIR = os.path.dirname(os.path.realpath(__file__))
 
+
 def test_get_config():
-    '''
+    """
     Test yaml load capacity
-    '''
-    config = unseal_vault.get_config('acme', f'{TEST_DIR}/dot_unseal_vault.yml')
+    """
+    config = unseal_vault.get_config("acme", f"{TEST_DIR}/dot_unseal_vault.yml")
     assert isinstance(config, dict)
     with pytest.raises(SystemExit):
-        unseal_vault.get_config('missing', f'{TEST_DIR}/dot_unseal_vault.yml')
+        unseal_vault.get_config("missing", f"{TEST_DIR}/dot_unseal_vault.yml")
     with pytest.raises(SystemExit):
-        unseal_vault.get_config('acme', 'missing-file.yaml')
+        unseal_vault.get_config("acme", "missing-file.yaml")
     with pytest.raises(SystemExit):
-        unseal_vault.get_config('acme', f'{TEST_DIR}/bad.yml')
+        unseal_vault.get_config("acme", f"{TEST_DIR}/bad.yml")
 
 
 def test_handle_config():
-    '''
+    """
     Test handle_config capacity
-    '''
-    mock_get_config_op = patch('unseal_vault.get_config_op_v1', autospec=True)
+    """
+    mock_get_config_op = patch("unseal_vault.get_config_op_v1", autospec=True)
     with mock_get_config_op as m:
-        config = {'type': 'op_v1', 'op_vault': 'Infrastructure'}
+        config = {"type": "op_v1", "op_vault": "Infrastructure"}
         unseal_vault.handle_config(config)
         m.assert_called_with(config)
 
-    mock_get_config_op = patch('unseal_vault.get_config_op_v2', autospec=True)
+    mock_get_config_op = patch("unseal_vault.get_config_op_v2", autospec=True)
     with mock_get_config_op as m:
-        config = {'type': 'op_v2', 'op_vault': 'Infrastructure'}
+        config = {"type": "op_v2", "op_vault": "Infrastructure"}
         unseal_vault.handle_config(config)
         m.assert_called_with(config)
 
@@ -100,19 +97,21 @@ def test_handle_config():
 
 
 class Consul(object):
-    '''
+    """
     Consul mock
-    '''
+    """
+
     def __init__(self, *kargs):
-        '''
+        """
         Mock init
-        '''
+        """
         self.catalog = Consul.Catalog(self)
 
     class Catalog(object):
-        '''
+        """
         Mock catalog
-        '''
+        """
+
         def __init__(self, *kargs):
             pass
 
