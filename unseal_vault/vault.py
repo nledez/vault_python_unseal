@@ -11,11 +11,11 @@ def unseal(scheme, host, port, unseal_keys, name=None):
 
     *unseal_keys* the unseal keys list
     """
-    url = "{}://{}:{}".format(scheme, host, port)
-    print("Connect to URL: {}".format(url))
+    url = f"{scheme}://{host}:{port}"
+    print(f"Connect to URL: {url}")
 
     if name:
-        print("{}:".format(name))
+        print(f"{name}:")
     client = hvac.Client(url=url, verify=False)
     if client.sys.is_sealed():
         print("Server sealed")

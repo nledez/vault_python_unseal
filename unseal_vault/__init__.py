@@ -24,7 +24,7 @@ def get_config(config_name, yaml_file="~/.unseal_vault.yml"):
 
     full_path = os.path.expanduser(yaml_file)
     if not os.path.exists(full_path):
-        print("Missing {} file. Please create it.".format(full_path))
+        print(f"Missing {full_path} file. Please create it.", file=sys.stderr)
         sys.exit(1)
     else:
         with open(full_path, "r") as stream:

@@ -13,10 +13,10 @@ from unseal_vault.vault import unseal
 
 if len(sys.argv) <= 1:
     print("Must have a cluster in argument:")
-    print("{} <cluster>".format(sys.argv[0]))
+    print(f"{sys.argv[0]} <cluster>")
     sys.exit(1)
 cluster = sys.argv[1]
-print("Unseal cluster: {}".format(cluster))
+print(f"Unseal cluster: {cluster}")
 
 # Disable ssl warning:
 urllib3.disable_warnings()
@@ -42,7 +42,7 @@ socks.set_default_proxy(
 socket.socket = socks.socksocket
 
 # Launch background ssh
-print("Connect with: {}".format(config["ssh_command"]))
+print(f"Connect with: {config['ssh_command']}")
 stream = subprocess.Popen(config["ssh_command"], shell=True)
 stream.communicate()
 

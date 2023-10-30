@@ -58,9 +58,7 @@ def get_config_op_v3(config):
 
 def os_get_item_entry(config, title, entry_name):
     op = config.get("ob_binary", "op")
-    stream = run_cmd(
-        '{} read "op://{}/{}/{}"'.format(op, config["op_vault"], title, entry_name)
-    )
+    stream = run_cmd(f'{op} read "op://{config["op_vault"]}/{title}/{entry_name}"')
     data = stream.decode().rstrip("\n")
 
     return data

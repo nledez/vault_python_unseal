@@ -11,7 +11,7 @@ def get_config_passtore(pass_name):
 
     *pass_name* is the name of documents contain config
     """
-    stream = run_cmd("pass show {}".format(pass_name))
+    stream = run_cmd(f"pass show {pass_name}")
     try:
         return yaml.load(stream, Loader=yaml.FullLoader)
     except yaml.YAMLError as exc:

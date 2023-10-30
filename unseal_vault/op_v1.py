@@ -16,7 +16,7 @@ def get_config_op_v1(config):
     try:
         uuid = op_get_item_id(config, config["op_title"])
     except KeyError:
-        print("Unknown config in 1password: {}".format(config["op_title"]))
+        print(f"Unknown config in 1password: {config['op_title']}")
         print("Config:")
         print(config)
         sys.exit(1)
@@ -37,7 +37,7 @@ def op_get_item_id(config, title):
 def op_get_vault_item_list(config):
     op = config.get("ob_binary", "op")
     item_list = {}
-    stream = run_cmd("{} list items --vault={}".format(op, config["op_vault"]))
+    stream = run_cmd(f"{op} list items --vault={config['op_vault']}")
     data = json.loads(stream)
 
     for item in data:
@@ -67,13 +67,7 @@ def op_check_existing_vault(config):
 
 def op_get_data(config, uuid):
     op = config.get("ob_binary", "op")
-    stream = run_cmd(
-        "{} get item {} --vault={}".format(
-            op,
-            uuid,
-            config["op_vault"],
-        )
-    )
+    stream = run_cmd(f"{op} get item {uuid} --vault={config['op_vault']}")
     data = json.loads(stream)
     return data
 

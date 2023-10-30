@@ -58,9 +58,7 @@ def get_config_op_v2(config):
 def os_get_item_entry(config, title, entry_name):
     op = config.get("ob_binary", "op")
     stream = run_cmd(
-        '{} item get --vault "{}" "{}" --format json --fields label="{}" 2>/dev/null'.format(
-            op, config["op_vault"], title, entry_name
-        )
+        f'{op} item get --vault "{config["op_vault"]}" "{title}" --format json --fields label="{entry_name}" 2>/dev/null'
     )
     data = json.loads(stream)
 

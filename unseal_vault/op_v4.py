@@ -56,7 +56,7 @@ def get_config_op_v4(config):
 
 def os_get_item_entry(config, path):
     op = config.get("ob_binary", "op")
-    stream = run_cmd('{} read "{}"'.format(op, path))
+    stream = run_cmd(f'{op} read "{path}"')
     data = stream.decode().rstrip("\n")
 
     return data
