@@ -61,7 +61,7 @@ def op_check_existing_vault(config):
             print("Need to login with:")
             print(f"eval $({op} signin)")
             sys.exit(1)
-    except (subprocess.CalledProcessError):
+    except subprocess.CalledProcessError:
         sys.exit(1)
 
 
