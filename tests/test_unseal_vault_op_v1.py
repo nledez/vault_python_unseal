@@ -1,6 +1,7 @@
 """
 Test unseal_vault.op_v1
 """
+
 import subprocess
 from unittest.mock import patch
 

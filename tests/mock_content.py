@@ -1,6 +1,7 @@
 """
 All mocks data here
 """
+
 YAML_CONTENT = "---\nunseal_keys:\n  - FoimdeegElmEctyinOssokparabBat"
 
 YAML_FILE_PARSE_ERROR = """while parsing a flow node
