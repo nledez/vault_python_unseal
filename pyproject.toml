@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "unseal-vault"
-version = "0.2.1"
+version = "0.2.3"
 description = "Python helper for unseal `Vault.io <http://vaultproject.io/>`"
 authors = ["Nicolas Ledez <github.public@ledez.net>"]
 license = "AGPL"
