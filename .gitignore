@@ -11,3 +11,6 @@ htmlcov/
 vault_unseal.egg-info/
 .venv/
 dist/
+
+# 1Password binary to test
+op
