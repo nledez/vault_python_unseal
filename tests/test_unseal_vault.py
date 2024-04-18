@@ -27,21 +27,21 @@ def test_get_config():
         unseal_vault.get_config("acme", f"{TEST_DIR}/bad.yml")
 
 
-def test_handle_config():
-    """
-    Test handle_config capacity
-    """
-    mock_get_config_op = patch("unseal_vault.get_config_op_v1", autospec=True)
-    with mock_get_config_op as m:
-        config = {"type": "op_v1", "op_vault": "Infrastructure"}
-        unseal_vault.handle_config(config)
-        m.assert_called_with(config)
-
-    mock_get_config_op = patch("unseal_vault.get_config_op_v2", autospec=True)
-    with mock_get_config_op as m:
-        config = {"type": "op_v2", "op_vault": "Infrastructure"}
-        unseal_vault.handle_config(config)
-        m.assert_called_with(config)
+# def test_handle_config():
+#     """
+#     Test handle_config capacity
+#     """
+#     mock_get_config_op = patch("unseal_vault.get_config_op_v1", autospec=True)
+#     with mock_get_config_op as m:
+#         config = {"type": "op_v1", "op_vault": "Infrastructure"}
+#         unseal_vault.handle_config(config)
+#         m.assert_called_with(config)
+#
+#     mock_get_config_op = patch("unseal_vault.get_config_op_v2", autospec=True)
+#     with mock_get_config_op as m:
+#         config = {"type": "op_v2", "op_vault": "Infrastructure"}
+#         unseal_vault.handle_config(config)
+#         m.assert_called_with(config)
 
 
 # def test_get_config_yaml(capsys):

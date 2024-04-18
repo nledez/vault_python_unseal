@@ -7,9 +7,6 @@ import sys
 
 import yaml
 
-from .op_v1 import get_config_op_v1
-from .op_v2 import get_config_op_v2
-from .op_v3 import get_config_op_v3
 from .op_v4 import get_config_op_v4
 
 
@@ -39,11 +36,5 @@ def get_config(config_name, yaml_file="~/.unseal_vault.yml"):
 
 
 def handle_config(config):
-    if config["type"] == "op_v1":
-        return get_config_op_v1(config)
-    if config["type"] == "op_v2":
-        return get_config_op_v2(config)
-    if config["type"] == "op_v3":
-        return get_config_op_v3(config)
     if config["type"] == "op_v4":
         return get_config_op_v4(config)
