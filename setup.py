@@ -52,13 +52,19 @@ setuptools.setup(
     tests_require=["pytest"],
     # package_data={'': ['requirements.txt']},
     description="HashiCorp Vault unseal helper",
-    long_description=open("README.rst").read(),
+    # long_description=open("README.rst").read(),
     author="Nicolas Ledez",
     author_email="pypi.python.org@ledez.net",
     url="https://github.com/nledez/vault_python_unseal",
     keywords=["hashicorp", "vault"],
     # scripts=['manage.py'],
     packages=setuptools.find_packages(exclude=["tests"]),
+    # scripts = ['unseal.py'],
+    # entry_points={
+    #     'console_scripts': [
+    #         'unseal_vault = unseal_vault.unseal:main',
+    #     ],
+    # },
     zip_safe=False,
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
