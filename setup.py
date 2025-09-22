@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-    Package build script
+Package build script
 """
 
 import os
