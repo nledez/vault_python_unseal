@@ -8,7 +8,7 @@ import socks
 import urllib3
 
 from unseal_vault import get_config, handle_config
-from unseal_vault.consul import consul_get_vault_server
+from unseal_vault.my_consul import consul_get_vault_server
 from unseal_vault.vault import unseal
 
 
@@ -63,3 +63,7 @@ def main():
             config["unseal_keys"],
             server["node_name"],
         )
+
+
+if __name__ == "__main__":
+    main()
